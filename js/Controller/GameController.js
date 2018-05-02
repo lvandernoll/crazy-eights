@@ -9,14 +9,15 @@ class GameController {
 		this.MODEL = new GameModel();
 		// Create deck
 		this.DECK = new Deck(this.CONFIG);
+		// Create players
+		this.PLAYERS = [];
 		// Create user
-		this.USER = new User(this.DECK.drawCard(5));
+		this.PLAYERS.push(new User(this.DECK.drawCard(this.CONFIG.startingCardsCount)));
 		// Create computers
-		this.COMPUTERS = [];
 		for( let i = 0; i < this.CONFIG.computerCount; i++ ) {
-			this.COMPUTERS.push(new Computer(this.DECK.drawCard(5)));
+			this.PLAYERS.push(new Computer(this.DECK.drawCard(this.CONFIG.startingCardsCount)));
 		}
 		// Create view
-		this.VIEW = new GameView();
+		this.VIEW = new GameView(this.CONFIG, this.PLAYERS);
 	}
 }

@@ -1,7 +1,7 @@
 class Deck {
 
 	/**
-	 * @param {Object} config - An object including the {Object} cardtypes, {Boolean} includesJoker
+	 * @param {Object} config - An object containing the {Object} cardtypes, {Boolean} includesJoker
 	 */
 	constructor(config) {
 		console.log(this);
@@ -45,7 +45,7 @@ class Deck {
 			this.deck.push({
 				type	: type,
 				card	: card,
-				image	: `/img/${typeIndex}/${card}.png`,
+				image	: `${this.CONFIG.imagesPath}/${typeIndex}/${card}.png`,
 			});
 
 			if( i % 13 === 12 ) {
@@ -57,7 +57,7 @@ class Deck {
 				this.deck.push({
 					type	: 'joker',
 					card	: 'J',
-					image	: `/img/${type}/${card}.png`,
+					image	: `${this.CONFIG.imagesPath}/${type}/${card}.png`,
 				});
 			}
 		}
