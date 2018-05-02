@@ -1,4 +1,4 @@
-class GameView {
+class GameModel {
 
 	constructor() {
 		console.log(this);
