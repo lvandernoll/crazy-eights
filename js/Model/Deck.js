@@ -1,13 +1,15 @@
 class Deck {
 
 	/**
-	 * @param {Array} cardTypes - An array including the 4 different types of cards
+	 * @param {Object} config - An object including the {Object} cardtypes, {Boolean} includesJoker
 	 */
-	constructor(cardTypes) {
+	constructor(config) {
 		console.log(this);
 
-		this.cardTypes = cardTypes;
-		this.includesJoker = false;
+		this.CONFIG = config;
+
+		this.cardTypes = this.CONFIG.cardTypes;
+		this.includesJoker = this.CONFIG.includesJoker;
 		this.deck = [];
 
 		this.createDeck();
@@ -18,10 +20,9 @@ class Deck {
 	 * Adds objects to the deck array
 	 */
 	createDeck() {
-
 		let typeIndex = 0;
 		for( let i = 0; i < 52; i++ ) {
-			let type = this.cardTypes[typeIndex];
+			let type = this.cardTypes[Object.keys(this.cardTypes)[typeIndex]];
 			let card;
 
 			switch( i % 13 ) {
@@ -63,10 +64,10 @@ class Deck {
 	}
 
 	/**
-	 *  Shuffles the deck array
+	 * Shuffles the deck array
 	 */
 	shuffleDeck() {
-		this.deck.sort(() => Math.random() - 0.5);
+		this.deck.sort( () => Math.random() - 0.5);
 	}
 
 	/**
