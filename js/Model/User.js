@@ -1,4 +1,4 @@
-class Computer extends Player {
+class User extends Player {
 
 	constructor(cards) {
 		super(cards);
