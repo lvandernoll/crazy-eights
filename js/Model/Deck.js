@@ -1,8 +1,12 @@
 class Deck {
 
-	constructor() {
+	/**
+	 * @param {Array} cardTypes - An array including the 4 different types of cards
+	 */
+	constructor(cardTypes) {
 		console.log(this);
 
+		this.cardTypes = cardTypes;
 		this.includesJoker = false;
 		this.deck = [];
 
@@ -10,18 +14,14 @@ class Deck {
 		this.shuffleDeck();
 	}
 
-	// Adds objects to the deck array
+	/**
+	 * Adds objects to the deck array
+	 */
 	createDeck() {
-		let types = [
-			'harten',
-			'klavers',
-			'ruiten',
-			'schoppen',
-		];
 
 		let typeIndex = 0;
 		for( let i = 0; i < 52; i++ ) {
-			let type = types[typeIndex];
+			let type = this.cardTypes[typeIndex];
 			let card;
 
 			switch( i % 13 ) {
@@ -44,7 +44,7 @@ class Deck {
 			this.deck.push({
 				type	: type,
 				card	: card,
-				image	: `/img/${type}/${card}.png`,
+				image	: `/img/${typeIndex}/${card}.png`,
 			});
 
 			if( i % 13 === 12 ) {
@@ -62,13 +62,18 @@ class Deck {
 		}
 	}
 
-	// Shuffles the deck array
+	/**
+	 *  Shuffles the deck array
+	 */
 	shuffleDeck() {
 		this.deck.sort(() => Math.random() - 0.5);
 	}
 
-	// Removes last n object(s) from deck array
-	// Returns array with those object(s)
+	/**
+	 * Removes last n object(s) from deck array
+	 * @param {number} amount - The amount of cards you want to draw
+	 * @returns {Array} - An array with the cards you drew
+	 */
 	drawCard(amount = 1) {
 		let cards = [];
 		for( let i = 0; i < amount; i++ ) {
