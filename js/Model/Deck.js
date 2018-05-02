@@ -54,8 +54,8 @@ class Deck {
 		if( this.includesJoker ) {
 			for( let i = 0; i < 2; i++ ) {
 				this.deck.push({
-					type : 'joker',
-					card : 'J',
+					type	: 'joker',
+					card	: 'J',
 					image	: `/img/${type}/${card}.png`,
 				});
 			}
@@ -67,8 +67,8 @@ class Deck {
 		this.deck.sort(() => Math.random() - 0.5);
 	}
 
-	// Removes last object from deck array
-	// Returns array with object(s)
+	// Removes last n object(s) from deck array
+	// Returns array with those object(s)
 	drawCard(amount = 1) {
 		let cards = [];
 		for( let i = 0; i < amount; i++ ) {
