@@ -22,7 +22,25 @@ class GameController {
 			this.PLAYERS.push(new Computer(`Computer ${i + 1}`, this.DECK.drawCard(this.CONFIG.startingCardsCount)));
 		}
 		// Create view
-		this.VIEW = new GameView(this.CONFIG, this.PLAYERS, this.DECK);
+		this.VIEW = new GameView(this.CONFIG, this);
+		this.updateView();
+	}
+
+	/**
+	 * Draws an amount of cards and gives it to a player
+	 * @param {number} playerId - The id of the player to give the drawn cards
+	 * @param {number} amount - The amount of cards to be drawn
+	 */
+	drawCard(playerId, amount) {
+		this.PLAYERS[playerId].giveCards(this.DECK.drawCard(amount));
+		this.updateView();
+	}
+
+	/**
+	 * Clears and updates all HTML elements of the view
+	 */
+	updateView() {
+		this.VIEW.clearView();
 		for( let i = 1; i < this.PLAYERS.length; i++ ) {
 			this.VIEW.showOpponentHeader(this.PLAYERS[i].getName(), this.PLAYERS[i].getHand().length);
 		}

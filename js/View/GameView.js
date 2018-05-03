@@ -2,18 +2,20 @@ class GameView {
 
 	/**
 	 * @param {Object} config - An object containing the {Object} cardtypes, {Boolean} includesJoker
+	 * @param {Controller} controller - The game's controller
 	 */
-	constructor(config) {
+	constructor(config, controller) {
 		console.log(this);
 
 		this.CONFIG = config;
+		this.CONTROLLER = controller;
+		this.OPPONENTHEADERARRAY = [];
 
+		// Get elements
 		this.OPPONENTVIEW = document.querySelector('#opponentHeader');
 		this.USERHANDVIEW = document.querySelector('#userHand');
 		this.DECKVIEW = document.querySelector('#gameDeck');
 		this.PILEVIEW = document.querySelector('#gamePile');
-
-		this.OPPONENTHEADERARRAY = [];
 	}
 
 	/**
@@ -51,6 +53,10 @@ class GameView {
 			let cardImage = document.createElement('img');
 			cardImage.setAttribute('src', userHand[i].image);
 			cardField.appendChild(cardImage);
+			// Click listener
+			cardImage.addEventListener('click', () => {
+				console.log(i);
+			});
 		}
 		this.USERHANDVIEW.appendChild(textField);
 		this.USERHANDVIEW.appendChild(cardField);
@@ -71,6 +77,10 @@ class GameView {
 		this.DECKVIEW.appendChild(textField);
 		this.DECKVIEW.appendChild(cardImage);
 		this.DECKVIEW.appendChild(cardCount);
+		// Click listener
+		cardImage.addEventListener('click', () => {
+			this.CONTROLLER.drawCard(0, 1);
+		});
 	}
 
 	/**
@@ -82,5 +92,15 @@ class GameView {
 		cardImage.setAttribute('src', lastCardImage);
 
 		this.PILEVIEW.appendChild(cardImage);
+	}
+
+	/**
+	 * Clears all HTML elements of the view
+	 */
+	clearView() {
+		this.OPPONENTVIEW.innerHTML = '';
+		this.USERHANDVIEW.innerHTML = '';
+		this.DECKVIEW.innerHTML = '';
+		this.PILEVIEW.innerHTML = '';
 	}
 }
