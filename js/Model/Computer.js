@@ -1,7 +1,6 @@
 class Computer extends Player {
 
 	/**
-	 * 
 	 * @param {String} name - The computer's username
 	 * @param {Array} cards - An array containing the computer's cards
 	 */

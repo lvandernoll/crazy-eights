@@ -9,6 +9,10 @@ class GameController {
 		this.MODEL = new GameModel();
 		// Create deck
 		this.DECK = new Deck(this.CONFIG);
+		for( let i = 0; i < this.CONFIG.deckCount; i++ ) {
+			this.DECK.createDeck();
+		}
+		this.DECK.shuffleDeck();
 		// Create players
 		this.PLAYERS = [];
 		// Create user

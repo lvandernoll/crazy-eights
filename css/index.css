@@ -1,0 +1,21 @@
+* {
+  font-family: 'Ubuntu'; }
+
+img {
+  width: 50px;
+  image-rendering: pixelated;
+  background-color: white;
+  border: 1px solid black;
+  margin: 1px; }
+
+.opponent__header {
+  background-color: red; }
+
+.game__deck {
+  background-color: lightblue; }
+
+.game__pile {
+  background-color: purple; }
+
+.user__hand {
+  background-color: green; }

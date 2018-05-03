@@ -7,9 +7,6 @@ gulp.task('sass', function () {
 	return gulp.src('sass/index.scss')
 		.pipe(sass().on('error', sass.logError))
 		.pipe(gulp.dest('css'))
-		.pipe(browserSync.reload({
-			stream: true
-		}))
 });
 
 gulp.task('browserSync', function() {
@@ -23,8 +20,10 @@ gulp.task('browserSync', function() {
 
 gulp.task('watch', ['sass', 'browserSync'], function() {
 	gulp.watch('sass/*.scss', ['sass']);
+	gulp.watch('sass/*.scss', browserSync.reload);
 	gulp.watch('js/**/*.js', browserSync.reload);
 	gulp.watch('index.html', browserSync.reload);
+	gulp.watch('.config', browserSync.reload);
 });
 
 gulp.task('default', ['watch'], function() {

@@ -11,9 +11,6 @@ class Deck {
 		this.cardTypes = this.CONFIG.cardTypes;
 		this.includesJoker = this.CONFIG.includesJoker;
 		this.deck = [];
-
-		this.createDeck();
-		this.shuffleDeck();
 	}
 
 	/**
@@ -43,9 +40,9 @@ class Deck {
 			}
 			
 			this.deck.push({
-				type	: type,
-				card	: card,
-				image	: `${this.CONFIG.imagesPath}/${typeIndex}/${card}.png`,
+				type: type,
+				card: card,
+				image: `${this.CONFIG.imagesPath}/${typeIndex}/${card}.png`,
 			});
 
 			if( i % 13 === 12 ) {
@@ -55,9 +52,9 @@ class Deck {
 		if( this.includesJoker ) {
 			for( let i = 0; i < 2; i++ ) {
 				this.deck.push({
-					type	: 'joker',
-					card	: 'J',
-					image	: `${this.CONFIG.imagesPath}/${type}/${card}.png`,
+					type: 'joker',
+					card: 'J',
+					image: `${this.CONFIG.imagesPath}/${type}/${card}.png`,
 				});
 			}
 		}
