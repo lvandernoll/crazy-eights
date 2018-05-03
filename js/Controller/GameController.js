@@ -15,9 +15,15 @@ class GameController {
 		this.PLAYERS.push(new User(this.DECK.drawCard(this.CONFIG.startingCardsCount)));
 		// Create computers
 		for( let i = 0; i < this.CONFIG.computerCount; i++ ) {
-			this.PLAYERS.push(new Computer(this.DECK.drawCard(this.CONFIG.startingCardsCount)));
+			this.PLAYERS.push(new Computer(`Computer ${i + 1}`, this.DECK.drawCard(this.CONFIG.startingCardsCount)));
 		}
 		// Create view
-		this.VIEW = new GameView(this.CONFIG, this.PLAYERS);
+		this.VIEW = new GameView(this.CONFIG, this.PLAYERS, this.DECK);
+		for( let i = 1; i < this.PLAYERS.length; i++ ) {
+			this.VIEW.showOpponentHeader(this.PLAYERS[i].getName(), this.PLAYERS[i].getHand().length);
+		}
+		this.VIEW.showUserHand(this.PLAYERS[0].getHand());
+		this.VIEW.showDeck(this.DECK.getDeck().length);
+		this.VIEW.showPile('/img/joker/J.png');
 	}
 }

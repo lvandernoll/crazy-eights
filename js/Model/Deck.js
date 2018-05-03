@@ -82,4 +82,8 @@ class Deck {
 		}
 		return cards;
 	}
+
+	getDeck() {
+		return this.deck;
+	}
 }

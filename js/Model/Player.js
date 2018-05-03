@@ -8,4 +8,8 @@ class Player {
 
 		this.hand = cards;
 	}
+
+	getHand() {
+		return this.hand;
+	}
 }
