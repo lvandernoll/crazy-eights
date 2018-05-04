@@ -25,4 +25,12 @@ class Player {
 			this.hand.push(cards[i]);
 		}
 	}
+
+	/**
+	 * Removes a card from the player's hand
+	 * @param {number} cardId - The index of the card to be removed from the player's hand
+	 */
+	removeCard(cardId) {
+		this.hand.splice(cardId, 1);
+	}
 }

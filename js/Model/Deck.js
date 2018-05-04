@@ -2,11 +2,13 @@ class Deck {
 
 	/**
 	 * @param {Object} config - An object containing the {Object} cardtypes, {Boolean} includesJoker
+	 * @param {Controller} controller - The game's controller
 	 */
-	constructor(config) {
+	constructor(config, controller) {
 		console.log(this);
 
 		this.CONFIG = config;
+		this.CONTROLLER = controller;
 
 		this.cardTypes = this.CONFIG.cardTypes;
 		this.includesJoker = this.CONFIG.includesJoker;
@@ -63,7 +65,7 @@ class Deck {
 	/**
 	 * Shuffles the deck array
 	 */
-	shuffleDeck() {
+	shuffle() {
 		this.deck.sort( () => Math.random() - 0.5);
 	}
 
@@ -75,12 +77,28 @@ class Deck {
 	drawCard(amount = 1) {
 		let cards = [];
 		for( let i = 0; i < amount; i++ ) {
-			cards.push(this.deck.pop());
+			if( this.deck.length > 0 ) {
+				cards.push(this.deck.pop());
+			} else {
+				this.CONTROLLER.reshuffle();
+			}
 		}
 		return cards;
 	}
 
+	/**
+	 * Returns an array containing all cards currently in the deck
+	 * @returns {Array} - The array containing all cards currently in the deck
+	 */
 	getDeck() {
 		return this.deck;
+	}
+
+	/**
+	 * Puts cards on the bottom of the deck
+	 * @param {Array} cards - An array containing the cards to be added to the bottom of the deck
+	 */
+	putCards(cards) {
+		this.deck = [...cards, ...this.deck];
 	}
 }

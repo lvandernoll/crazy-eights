@@ -55,7 +55,7 @@ class GameView {
 			cardField.appendChild(cardImage);
 			// Click listener
 			cardImage.addEventListener('click', () => {
-				console.log(i);
+				this.CONTROLLER.playCard(0, i);
 			});
 		}
 		this.USERHANDVIEW.appendChild(textField);
@@ -88,9 +88,15 @@ class GameView {
 	 * @param {String} lastCardImage - The url to the card's image
 	 */
 	showPile(lastCardImage) {
+		let textField = document.createElement('header'); // Will be removed later
+		textField.innerText = 'Pile'; // Will be removed later
 		let cardImage = document.createElement('img');
 		cardImage.setAttribute('src', lastCardImage);
+		cardImage.addEventListener('click', () => { // Will be removed later
+			this.CONTROLLER.reshuffle();
+		});
 
+		this.PILEVIEW.appendChild(textField);
 		this.PILEVIEW.appendChild(cardImage);
 	}
 

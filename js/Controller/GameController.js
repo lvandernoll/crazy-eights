@@ -8,11 +8,12 @@ class GameController {
 		// Create model
 		this.MODEL = new GameModel();
 		// Create deck
-		this.DECK = new Deck(this.CONFIG);
+		this.DECK = new Deck(this.CONFIG, this);
 		for( let i = 0; i < this.CONFIG.deckCount; i++ ) {
 			this.DECK.createDeck();
 		}
-		this.DECK.shuffleDeck();
+		this.DECK.shuffle();
+		this.MODEL.putCard(this.DECK.drawCard()[0]); // Will be removed later
 		// Create players
 		this.PLAYERS = [];
 		// Create user
@@ -35,6 +36,17 @@ class GameController {
 		this.PLAYERS[playerId].giveCards(this.DECK.drawCard(amount));
 		this.updateView();
 	}
+	
+	/**
+	 * Puts a card on top of the pile and removes it from the player's hand
+	 * @param {number} playerId - The id of the player to remove a card from
+	 * @param {number} cardId - The id of the card to be removed from and played
+	 */
+	playCard(playerId, cardId) {
+		this.MODEL.putCard(this.PLAYERS[playerId].getHand()[cardId]);
+		this.PLAYERS[playerId].removeCard(cardId);
+		this.updateView();
+	}
 
 	/**
 	 * Clears and updates all HTML elements of the view
@@ -46,6 +58,20 @@ class GameController {
 		}
 		this.VIEW.showUserHand(this.PLAYERS[0].getHand());
 		this.VIEW.showDeck(this.DECK.getDeck().length);
-		this.VIEW.showPile('/img/joker/J.png');
+		this.VIEW.showPile(this.MODEL.getTopCard().image);
+	}
+
+	/**
+	 * Shuffles the pile into the deck
+	 */
+	reshuffle() {
+		let takenCards = this.MODEL.takeCards();
+		if( takenCards.length > 0 ) {
+			this.DECK.putCards(takenCards);
+			this.DECK.shuffle();
+			this.updateView();
+		} else {
+			console.error('Pile is empty');
+		}
 	}
 }
