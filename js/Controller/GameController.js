@@ -43,9 +43,12 @@ class GameController {
 	 * @param {number} cardId - The id of the card to be removed from and played
 	 */
 	playCard(playerId, cardId) {
-		this.MODEL.putCard(this.PLAYERS[playerId].getHand()[cardId]);
-		this.PLAYERS[playerId].removeCard(cardId);
-		this.updateView();
+		let card = this.PLAYERS[playerId].getHand()[cardId];
+		if( this.MODEL.compareCard(card) ) {
+			this.MODEL.putCard(card);
+			this.PLAYERS[playerId].removeCard(cardId);
+			this.updateView();
+		}
 	}
 
 	/**
@@ -56,9 +59,15 @@ class GameController {
 		for( let i = 1; i < this.PLAYERS.length; i++ ) {
 			this.VIEW.showOpponentHeader(this.PLAYERS[i].getName(), this.PLAYERS[i].getHand().length);
 		}
-		this.VIEW.showUserHand(this.PLAYERS[0].getHand());
 		this.VIEW.showDeck(this.DECK.getDeck().length);
 		this.VIEW.showPile(this.MODEL.getTopCard().image);
+		
+		let userHand = this.PLAYERS[0].getHand();
+		let checkedHand = [];
+		for( let i = 0; i < userHand.length; i++ ) {
+			checkedHand.push(this.MODEL.compareCard(userHand[i]));
+		}
+		this.VIEW.showUserHand(this.PLAYERS[0].getHand(), checkedHand);
 	}
 
 	/**

@@ -32,4 +32,20 @@ class GameModel {
 	getTopCard() {
 		return this.pile[this.pile.length - 1];
 	}
+
+	/**
+	 * Compares a card with the top card on the pile to see if it can be played
+	 * @param {Object} card - The card to be compared
+	 */
+	compareCard(card) {
+		if( this.pile.length === 0
+		|| card.type === this.getTopCard().type
+		|| card.code === this.getTopCard().code
+		|| card.type === 'joker'
+		|| this.getTopCard().type === 'joker' ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

@@ -22,29 +22,29 @@ class Deck {
 		let typeIndex = 0;
 		for( let i = 0; i < 52; i++ ) {
 			let type = this.cardTypes[Object.keys(this.cardTypes)[typeIndex]];
-			let card;
+			let code;
 
 			switch( i % 13 ) {
 				case 0:
-					card = 'A';
+					code = 'A';
 					break;
 				case 10:
-					card = 'B';
+					code = 'B';
 					break;
 				case 11:
-					card = 'V';
+					code = 'V';
 					break;
 				case 12:
-					card = 'H';
+					code = 'H';
 					break;
 				default:
-					card = (i % 13) + 1;
+					code = (i % 13) + 1;
 			}
 			
 			this.deck.push({
 				type: type,
-				card: card,
-				image: `${this.CONFIG.imagesPath}/${typeIndex}/${card}.png`,
+				code: code,
+				image: `${this.CONFIG.imagesPath}/${typeIndex}/${code}.png`,
 			});
 
 			if( i % 13 === 12 ) {
@@ -55,8 +55,8 @@ class Deck {
 			for( let i = 0; i < 2; i++ ) {
 				this.deck.push({
 					type: 'joker',
-					card: 'J',
-					image: `${this.CONFIG.imagesPath}/${type}/${card}.png`,
+					code: 'J',
+					image: `${this.CONFIG.imagesPath}/joker/J.png`,
 				});
 			}
 		}

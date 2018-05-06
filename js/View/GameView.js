@@ -9,7 +9,6 @@ class GameView {
 
 		this.CONFIG = config;
 		this.CONTROLLER = controller;
-		this.OPPONENTHEADERARRAY = [];
 
 		// Get elements
 		this.OPPONENTVIEW = document.querySelector('#opponentHeader');
@@ -37,14 +36,14 @@ class GameView {
 		opponentField.appendChild(imageField);
 		opponentField.appendChild(cardCountField);
 		this.OPPONENTVIEW.appendChild(opponentField);
-		this.OPPONENTHEADERARRAY.push(opponentField);
 	}
 
 	/**
-	 * Shows all user cards
+	 * Shows all user cards, adds click/hover events and darkens the image if the card cannot be played
 	 * @param {Array} userHand - An array containing all the cards in the user's hand
+	 * @param {Array} checkedHand - An array containing the booleans for if the card can be played or not
 	 */
-	showUserHand(userHand) {
+	showUserHand(userHand, checkedHand) {
 		let textField = document.createElement('header');
 		textField.innerText = this.CONFIG.text.yourHand;
 		let cardField = document.createElement('div');
@@ -53,10 +52,23 @@ class GameView {
 			let cardImage = document.createElement('img');
 			cardImage.setAttribute('src', userHand[i].image);
 			cardField.appendChild(cardImage);
-			// Click listener
-			cardImage.addEventListener('click', () => {
-				this.CONTROLLER.playCard(0, i);
-			});
+			if( checkedHand[i] ) {
+				// Click event
+				cardImage.addEventListener('click', () => {
+					this.CONTROLLER.playCard(0, i);
+				});
+				// Hover event
+				cardImage.addEventListener('mouseover', () => {
+					cardImage.style.filter = 'brightness(75%)';
+				});
+				cardImage.addEventListener('mouseout', () => {
+					cardImage.style.filter = 'brightness(100%)';
+				});
+			} else {
+				// Darken image if cannot be played
+				cardImage.style.filter = 'brightness(50%)';
+			}
+			
 		}
 		this.USERHANDVIEW.appendChild(textField);
 		this.USERHANDVIEW.appendChild(cardField);
