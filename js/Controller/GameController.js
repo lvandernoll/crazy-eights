@@ -44,11 +44,13 @@ class GameController {
 	 * @param {number} cardId - The id of the card to be removed from and played
 	 */
 	playCard(playerId, cardId) {
-		let card = this.PLAYERS[playerId].getHand()[cardId];
-		if( this.MODEL.compareCard(card) ) {
-			this.MODEL.putCard(card);
-			this.PLAYERS[playerId].removeCard(cardId);
-			this.updateView();
+		if( this.currentPlayerCanPlay() ) {
+			let card = this.PLAYERS[playerId].getHand()[cardId];
+			if( this.MODEL.compareCard(card) ) {
+				this.MODEL.putCard(card);
+				this.PLAYERS[playerId].removeCard(cardId);
+				this.updateView();
+			}
 		}
 	}
 
@@ -99,5 +101,13 @@ class GameController {
 	changeType(type) {
 		this.MODEL.changeType(type);
 		this.updateView();
+	}
+
+	/**
+	 * Returns if the player who's turn it is can play
+	 * @returns {Boolean} - The boolean which specifies if the current player can play
+	 */
+	currentPlayerCanPlay() {
+		return this.PLAYERS[this.MODEL.currentPlayer()].canPlay();
 	}
 }

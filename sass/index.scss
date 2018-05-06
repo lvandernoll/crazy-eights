@@ -4,6 +4,7 @@
 
 img {
 	width: 60px;
+	height: 36px;
 	image-rendering: pixelated;
 	background-color: white;
 	border: 1px solid black;
@@ -12,6 +13,10 @@ img {
 
 .opponent__header {
 	background-color: lightpink;
+}
+
+.opponent__block {
+	display: flex;
 }
 
 .game__deck {

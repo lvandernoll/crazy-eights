@@ -10,6 +10,7 @@ class GameModel {
 
 		this.pile = [];
 		this.currentType;
+		this.currentPlayerId = 0;
 	}
 
 	/**
@@ -75,5 +76,13 @@ class GameModel {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Returns the player who's turn it currently is
+	 * @returns {number} - The id of the current player
+	 */
+	currentPlayer() {
+		return this.currentPlayer;
 	}
 }

@@ -7,6 +7,7 @@ class Player {
 		console.log(this);
 
 		this.hand = cards;
+		this.canPlay = false;
 	}
 
 	/**
@@ -32,5 +33,13 @@ class Player {
 	 */
 	removeCard(cardId) {
 		this.hand.splice(cardId, 1);
+	}
+
+	/**
+	 * Returns if the user can play at the moment
+	 * @returns {Boolean} - A boolean which specifies if the user can play or not at the moment
+	 */
+	canPlay() {
+		return this.canPlay;
 	}
 }
