@@ -15,6 +15,36 @@ class GameView {
 		this.USERHANDVIEW = document.querySelector('#userHand');
 		this.DECKVIEW = document.querySelector('#gameDeck');
 		this.PILEVIEW = document.querySelector('#gamePile');
+		this.POPUPVIEW = document.querySelector('#popup');
+		this.POPUPHEADERVIEW = document.querySelector('#popupHeader');
+		this.CONFIRMPOPUPVIEW = document.querySelector('#confirmPopup');
+		this.POPUPSELECTORVIEW = document.querySelector('#popupSelector');
+	}
+
+	/**
+	 * Constructs the popup with text, fills the selector with text and adds a click event on the button
+	 */
+	constructPopup() {
+		this.POPUPHEADERVIEW.innerText = this.CONFIG.text.selectType;
+
+		this.CONFIRMPOPUPVIEW.addEventListener('click', () => {
+			this.togglePopup();
+			this.CONTROLLER.changeType(this.POPUPSELECTORVIEW.value)
+		});
+
+		let cardTypes = this.CONFIG['cardTypes'];
+		for( let i = 0; i < 4; i++ ) {
+			let option = document.createElement('option');
+			option.innerText = cardTypes[Object.keys(cardTypes)[i]];
+			this.POPUPSELECTORVIEW.appendChild(option);
+		}
+	}
+
+	/**
+	 * Toggles the visibility of the popup which lets you choose a type (for when playing the jack)
+	 */
+	togglePopup() {
+		this.POPUPVIEW.classList.toggle('hidden');
 	}
 
 	/**
@@ -30,7 +60,7 @@ class GameView {
 		let imageField = document.createElement('img');
 		imageField.setAttribute('src', `${this.CONFIG.imagesPath}/back.png`);
 		let cardCountField = document.createElement('div');
-		cardCountField.innerText = `× ${cardCount}`;
+		cardCountField.innerText = `x ${cardCount}`;
 
 		opponentField.appendChild(nameField);
 		opponentField.appendChild(imageField);

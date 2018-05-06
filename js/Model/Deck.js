@@ -44,7 +44,7 @@ class Deck {
 			this.deck.push({
 				type: type,
 				code: code,
-				image: `${this.CONFIG.imagesPath}/${typeIndex}/${code}.png`,
+				image: `${this.CONFIG.imagesPath}/${Object.keys(this.cardTypes)[typeIndex]}/${code}.png`,
 			});
 
 			if( i % 13 === 12 ) {

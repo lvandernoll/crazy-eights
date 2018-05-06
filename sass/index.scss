@@ -25,3 +25,31 @@ img {
 .user__hand {
 	background-color: lightgreen;
 }
+
+.game__popup {
+	border: 1px solid black;
+	display: flex;
+	flex-direction: column;
+	width: fit-content;
+}
+
+.popup__header {
+	background-color: lightblue;
+	display: flex;
+	text-align: center;
+}
+
+.popup__confirm {
+	margin: 0 auto;
+	height: 50%;
+}
+
+.popup__selector {
+	margin: 0 auto;
+	height: 50%;
+	align-self: flex-end;
+}
+
+.hidden {
+	display: none;
+}

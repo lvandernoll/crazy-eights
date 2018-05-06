@@ -6,7 +6,7 @@ class GameController {
 		this.CONFIG = config;
 
 		// Create model
-		this.MODEL = new GameModel();
+		this.MODEL = new GameModel(this);
 		// Create deck
 		this.DECK = new Deck(this.CONFIG, this);
 		for( let i = 0; i < this.CONFIG.deckCount; i++ ) {
@@ -24,6 +24,7 @@ class GameController {
 		}
 		// Create view
 		this.VIEW = new GameView(this.CONFIG, this);
+		this.VIEW.constructPopup();
 		this.updateView();
 	}
 
@@ -82,5 +83,21 @@ class GameController {
 		} else {
 			console.error('Pile is empty');
 		}
+	}
+
+	/**
+	 * Opens a popup where the user can pick a type to choose the current playable type into
+	 */
+	openChangeTypePopup() {
+		this.VIEW.togglePopup();
+	}
+
+	/**
+	 * Changes the current playable type
+	 * @param {String} type - The type to be changed into
+	 */
+	changeType(type) {
+		this.MODEL.changeType(type);
+		this.updateView();
 	}
 }
