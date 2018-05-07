@@ -68,7 +68,11 @@ class GameController {
 		let userHand = this.PLAYERS[0].getHand();
 		let checkedHand = [];
 		for( let i = 0; i < userHand.length; i++ ) {
-			checkedHand.push(this.MODEL.compareCard(userHand[i]));
+			if( this.currentPlayerCanPlay() ) {
+				checkedHand.push(this.MODEL.compareCard(userHand[i]));
+			} else {
+				checkedHand.push(false);
+			}
 		}
 		this.VIEW.showUserHand(this.PLAYERS[0].getHand(), checkedHand);
 	}
@@ -108,6 +112,6 @@ class GameController {
 	 * @returns {Boolean} - The boolean which specifies if the current player can play
 	 */
 	currentPlayerCanPlay() {
-		return this.PLAYERS[this.MODEL.currentPlayer()].canPlay();
+		return this.MODEL.canPlay();
 	}
 }

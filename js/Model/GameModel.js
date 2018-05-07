@@ -10,6 +10,7 @@ class GameModel {
 
 		this.pile = [];
 		this.currentType;
+		this.playerCanPlay = true;
 		this.currentPlayerId = 0;
 	}
 
@@ -31,7 +32,10 @@ class GameModel {
 	putCard(card) {
 		this.pile.push(card);
 		this.currentType = this.pile[this.pile.length - 1].type;
-		this.checkCardRules(card);
+		// Only execute rules if the played card is not the starting card
+		if( this.pile.length > 1 ) {
+			this.checkCardRules(card);
+		}
 	}
 
 	/**
@@ -41,6 +45,7 @@ class GameModel {
 	checkCardRules(card) {
 		switch( card.code ) {
 			case 'B':
+				this.playerCanPlay = false;
 				this.CONTROLLER.openChangeTypePopup();
 				break;
 		}
@@ -51,6 +56,7 @@ class GameModel {
 	 * @param {String} type - The type to change to
 	 */
 	changeType(type) {
+		this.playerCanPlay = true;
 		this.currentType = type;
 	}
 
@@ -83,6 +89,14 @@ class GameModel {
 	 * @returns {number} - The id of the current player
 	 */
 	currentPlayer() {
-		return this.currentPlayer;
+		return this.currentPlayerId;
+	}
+
+	/**
+	 * Returns if the player can play at the moment
+	 * @returns {Boolean} - A boolean which specifies if the player can play or not at the moment
+	 */
+	canPlay() {
+		return this.playerCanPlay;
 	}
 }
