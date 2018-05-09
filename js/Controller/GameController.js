@@ -6,7 +6,7 @@ class GameController {
 		this.CONFIG = config;
 
 		// Create model
-		this.MODEL = new GameModel(this);
+		this.MODEL = new GameModel(this.CONFIG, this);
 		// Create deck
 		this.DECK = new Deck(this.CONFIG, this);
 		for( let i = 0; i < this.CONFIG.deckCount; i++ ) {
@@ -46,11 +46,12 @@ class GameController {
 	playCard(playerId, cardId) {
 		if( this.currentPlayerCanPlay() ) {
 			let card = this.PLAYERS[playerId].getHand()[cardId];
-			if( this.MODEL.compareCard(card) ) {
-				this.MODEL.putCard(card);
-				this.PLAYERS[playerId].removeCard(cardId);
-				this.updateView();
+			this.MODEL.putCard(card);
+			this.PLAYERS[playerId].removeCard(cardId);
+			if( !this.MODEL.playerMustPlayAgain() ) {
+				this.MODEL.nextTurn();
 			}
+			this.updateView();
 		}
 	}
 

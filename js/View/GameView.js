@@ -1,7 +1,7 @@
 class GameView {
 
 	/**
-	 * @param {Object} config - An object containing the {Object} cardtypes, {Boolean} includesJoker
+	 * @param {Object} config - An object containing the text to be displayed and more
 	 * @param {Controller} controller - The game's controller
 	 */
 	constructor(config, controller) {

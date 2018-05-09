@@ -1,17 +1,22 @@
 class GameModel {
 
 	/**
+	 * @param {Object} config - An object containing the amount of players and more
 	 * @param {Controller} controller - The game's controller
 	 */
-	constructor(controller) {
+	constructor(config, controller) {
 		console.log(this);
 
+		this.CONFIG = config;
 		this.CONTROLLER = controller;
 
 		this.pile = [];
 		this.currentType;
 		this.playerCanPlay = true;
 		this.currentPlayerId = 0;
+		this.direction = 'clockwise';
+		this.turn = 0;
+		this.playAgain = false;
 	}
 
 	/**
@@ -43,10 +48,28 @@ class GameModel {
 	 * @param {Object} card - The card to check
 	 */
 	checkCardRules(card) {
+		this.playAgain = false;
 		switch( card.code ) {
-			case 'B':
+			case 'A': // Change direction
+				this.switchDirection();
+				break;
+			case 2: // Next player draws 2 cards
+				this.CONTROLLER.drawCard(this.getNextPlayer(), 2);
+				break;
+			case 7: // Player has to play another turn
+			case 'H':
+				this.playAgain = true;
+				break;
+			case 8: // Next player has to skip a turn
+				this.nextTurn();
+				break;
+			case 'B': // Player can choose the type of card to be played next
 				this.playerCanPlay = false;
 				this.CONTROLLER.openChangeTypePopup();
+				this.playAgain = false;
+				break;
+			case 'J': // Next player draws {jokerWorth} cards
+				this.CONTROLLER.drawCard(this.getNextPlayer(), this.CONFIG.jokerWorth);
 				break;
 		}
 	}
@@ -98,5 +121,72 @@ class GameModel {
 	 */
 	canPlay() {
 		return this.playerCanPlay;
+	}
+
+	/**
+	 * Switches the direction the turns go to either clockwise or counter-clockwise
+	 */
+	switchDirection() {
+		if( this.direction === 'clockwise' ) {
+			this.direction = 'counter-clockwise';
+		} else {
+			this.direction = 'clockwise';
+		}
+	}
+
+	/**
+	 * Changes the turn to the id of the next player
+	 */
+	nextTurn() {
+		if( this.direction === 'clockwise' ) {
+			this.turn++;
+			if( this.turn > this.CONFIG.computerCount ) {
+				this.turn = 0;
+			}
+		} else {
+			this.turn--;
+			if( this.turn < 0 ) {
+				this.turn = this.CONFIG.computerCount;
+			}
+		}
+	}
+
+	/**
+	 * Returns the id of the next player
+	 */
+	getNextPlayer() {
+		if( this.direction == 'clockwise' ) {
+			if( this.turn + 1 > this.CONFIG.computerCount ) {
+				return 0;
+			}
+			return this.turn + 1;
+		} else {
+			if( this.turn - 1 < 0 ) {
+				return this.CONFIG.computerCount;
+			}
+			return this.turn - 1;
+		}
+	}
+
+	/**
+	 * Returns if the current player has to play again
+	 */
+	playerMustPlayAgain() {
+		if( this.playAgain === true ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Returns if the current turn is the user's
+	 */
+	isUserTurn() {
+		if( this.turn === 0 ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

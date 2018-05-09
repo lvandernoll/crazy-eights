@@ -1,7 +1,7 @@
 class Deck {
 
 	/**
-	 * @param {Object} config - An object containing the {Object} cardtypes, {Boolean} includesJoker
+	 * @param {Object} config - An object containing the cardtypes, includesJoker and more
 	 * @param {Controller} controller - The game's controller
 	 */
 	constructor(config, controller) {
