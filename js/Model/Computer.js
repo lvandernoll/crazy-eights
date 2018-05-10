@@ -21,6 +21,9 @@ class Computer extends Player {
 		return this.NAME;
 	}
 	
+	/**
+	 * Checks which cards can be played and picks one. If none can be played it draws one and continues to the next turn
+	 */
 	play() {
 		let checkedHand = this.CONTROLLER.checkHand(this.hand);
 		let validCardIds = [];
