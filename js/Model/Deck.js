@@ -77,7 +77,7 @@ class Deck {
 	drawCard(amount = 1) {
 		let cards = [];
 		for( let i = 0; i < amount; i++ ) {
-			if( this.deck.length > 0 ) {
+			if( this.deck.length > 1 ) {
 				cards.push(this.deck.pop());
 			} else {
 				this.CONTROLLER.reshuffle();
