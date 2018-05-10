@@ -51,8 +51,9 @@ class GameView {
 	 * Shows all opponent names, a card image, and their card count
 	 * @param {String} name - The opponent's name
 	 * @param {number} cardCount - The amount of cards the opponent has in his hand
+	 * @param {Boolean} isCurrentPlayer - A boolean which specifies if this opponent is currently playing
 	 */
-	showOpponentHeader(name, cardCount) {
+	showOpponentHeader(name, cardCount, isCurrentPlayer) {
 		let opponentField = document.createElement('div');
 		opponentField.setAttribute('class', `opponent__block`);
 		let nameField = document.createElement('div');
@@ -61,6 +62,10 @@ class GameView {
 		imageField.setAttribute('src', `${this.CONFIG.imagesPath}/back.png`);
 		let cardCountField = document.createElement('div');
 		cardCountField.innerText = `x ${cardCount}`;
+
+		if( isCurrentPlayer ) {
+			opponentField.style.backgroundColor = 'green';
+		}
 
 		opponentField.appendChild(nameField);
 		opponentField.appendChild(imageField);
@@ -72,8 +77,9 @@ class GameView {
 	 * Shows all user cards, adds click/hover events and darkens the image if the card cannot be played
 	 * @param {Array} userHand - An array containing all the cards in the user's hand
 	 * @param {Array} checkedHand - An array containing the booleans for if the card can be played or not
+	 * @param {Boolean} isCurrentPlayer - A boolean which specifies if the user is currently playing
 	 */
-	showUserHand(userHand, checkedHand) {
+	showUserHand(userHand, checkedHand, isCurrentPlayer) {
 		let textField = document.createElement('header');
 		textField.innerText = this.CONFIG.text.yourHand;
 		let cardField = document.createElement('div');
@@ -98,8 +104,14 @@ class GameView {
 				// Darken image if cannot be played
 				cardImage.style.filter = 'brightness(50%)';
 			}
-			
 		}
+
+		if( isCurrentPlayer ) {
+			this.USERHANDVIEW.style.backgroundColor = 'green';
+		} else {
+			this.USERHANDVIEW.style.backgroundColor = 'lightgreen';
+		}
+
 		this.USERHANDVIEW.appendChild(textField);
 		this.USERHANDVIEW.appendChild(cardField);
 	}
@@ -107,8 +119,9 @@ class GameView {
 	/**
 	 * Shows the deck containing the remaining cards
 	 * @param {Array} deckCount - The amount of cards left in the deck
+	 * @param {Boolean} userCanPlay - A boolean which specifies if the user can draw a card
 	 */
-	showDeck(deckCount) {
+	showDeck(deckCount, userCanPlay) {
 		let textField = document.createElement('header');
 		textField.innerText = this.CONFIG.text.deck;
 		let cardImage = document.createElement('img');
@@ -119,10 +132,18 @@ class GameView {
 		this.DECKVIEW.appendChild(textField);
 		this.DECKVIEW.appendChild(cardImage);
 		this.DECKVIEW.appendChild(cardCount);
-		// Click listener
-		cardImage.addEventListener('click', () => {
-			this.CONTROLLER.drawCard(0, 1);
-		});
+
+		let hasDrawn = false;
+		if( userCanPlay ) {
+			// Click listener
+			cardImage.addEventListener('click', () => {
+				if( !hasDrawn ) {
+					hasDrawn = true;
+					this.CONTROLLER.drawCard(0, 1);
+					this.CONTROLLER.nextTurn();
+				}
+			});
+		}
 	}
 
 	/**

@@ -20,7 +20,7 @@ class GameController {
 		this.PLAYERS.push(new User(this.DECK.drawCard(this.CONFIG.startingCardsCount)));
 		// Create computers
 		for( let i = 0; i < this.CONFIG.computerCount; i++ ) {
-			this.PLAYERS.push(new Computer(`Computer ${i + 1}`, this.DECK.drawCard(this.CONFIG.startingCardsCount)));
+			this.PLAYERS.push(new Computer(this, `Computer ${i + 1}`, this.DECK.drawCard(this.CONFIG.startingCardsCount)));
 		}
 		// Create view
 		this.VIEW = new GameView(this.CONFIG, this);
@@ -50,6 +50,11 @@ class GameController {
 			this.PLAYERS[playerId].removeCard(cardId);
 			if( !this.MODEL.playerMustPlayAgain() ) {
 				this.MODEL.nextTurn();
+			} else {
+				let THAT = this;
+				setTimeout( () => {
+					THAT.playComputer()
+				}, 1000);
 			}
 			this.updateView();
 		}
@@ -61,21 +66,36 @@ class GameController {
 	updateView() {
 		this.VIEW.clearView();
 		for( let i = 1; i < this.PLAYERS.length; i++ ) {
-			this.VIEW.showOpponentHeader(this.PLAYERS[i].getName(), this.PLAYERS[i].getHand().length);
+			let isCurrentPlayer;
+			if( this.MODEL.currentPlayer() === i ) {
+				isCurrentPlayer = true;
+			} else {
+				isCurrentPlayer = false;
+			}
+			this.VIEW.showOpponentHeader(this.PLAYERS[i].getName(), this.PLAYERS[i].getHand().length, isCurrentPlayer);
 		}
-		this.VIEW.showDeck(this.DECK.getDeck().length);
+		let userCanPlay;
+		if( this.MODEL.canPlay() && this.MODEL.isUserTurn() ) {
+			userCanPlay = true;
+		} else {
+			userCanPlay = false;
+		}
+		this.VIEW.showDeck(this.DECK.getDeck().length, userCanPlay);
 		this.VIEW.showPile(this.MODEL.getTopCard().image);
 		
-		let userHand = this.PLAYERS[0].getHand();
 		let checkedHand = [];
-		for( let i = 0; i < userHand.length; i++ ) {
-			if( this.currentPlayerCanPlay() ) {
-				checkedHand.push(this.MODEL.compareCard(userHand[i]));
-			} else {
+		let userHand = this.PLAYERS[0].getHand();
+		let isCurrentPlayer;
+		if( this.MODEL.isUserTurn() ) {
+			isCurrentPlayer = true;
+			checkedHand = this.checkHand(userHand);
+		} else {
+			isCurrentPlayer = false;
+			userHand.forEach( () => {
 				checkedHand.push(false);
-			}
+			})
 		}
-		this.VIEW.showUserHand(this.PLAYERS[0].getHand(), checkedHand);
+		this.VIEW.showUserHand(userHand, checkedHand, isCurrentPlayer);
 	}
 
 	/**
@@ -89,6 +109,16 @@ class GameController {
 			this.updateView();
 		} else {
 			console.error('Pile is empty');
+		}
+	}
+
+	/**
+	 * Excecutes the function which makes the computer play a card
+	 */
+	playComputer() {
+		let currentPlayerId = this.MODEL.currentPlayer();
+		if( currentPlayerId !== 0 ) {
+			this.PLAYERS[currentPlayerId].play();
 		}
 	}
 
@@ -114,5 +144,46 @@ class GameController {
 	 */
 	currentPlayerCanPlay() {
 		return this.MODEL.canPlay();
+	}
+
+	/**
+	 * Returns if the current turn is the user's
+	 * @returns {Boolean} - The boolean which specifies if the current turn is the user's
+	 */
+	isUserTurn() {
+		return this.MODEL.isUserTurn();
+	}
+
+	/**
+	 * Checks a hand and returns an array with booleans if the card can be played or not
+	 * @param {Array} hand - The hand to check
+	 * @returns {Array} - An array with booleans if the card can be played or not
+	 */
+	checkHand(hand) {
+		let checkedHand = [];
+		hand.forEach( (card, i) => {
+			if( this.currentPlayerCanPlay() ) {
+				checkedHand.push(this.MODEL.compareCard(hand[i]));
+			} else {
+				checkedHand.push(false);
+			}
+		});
+		return checkedHand;
+	}
+
+	/**
+	 * Returns the current player's id
+	 * @returns {number} - The current player's id
+	 */
+	currentPlayerId() {
+		return this.MODEL.currentPlayer();
+	}
+
+	/**
+	 * Changes the turn to the id of the next player
+	 */
+	nextTurn() {
+		this.MODEL.nextTurn();
+		this.updateView();
 	}
 }

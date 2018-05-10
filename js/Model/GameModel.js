@@ -15,7 +15,6 @@ class GameModel {
 		this.playerCanPlay = true;
 		this.currentPlayerId = 0;
 		this.direction = 'clockwise';
-		this.turn = 0;
 		this.playAgain = false;
 	}
 
@@ -64,9 +63,13 @@ class GameModel {
 				this.nextTurn();
 				break;
 			case 'B': // Player can choose the type of card to be played next
-				this.playerCanPlay = false;
-				this.CONTROLLER.openChangeTypePopup();
-				this.playAgain = false;
+				if( this.isUserTurn() ) {
+					this.playerCanPlay = false;
+					this.playAgain = true;
+					this.CONTROLLER.openChangeTypePopup();
+				} else {
+					this.currentType = this.CONFIG.cardTypes[Object.keys(this.CONFIG.cardTypes)[Math.floor(Math.random() * 4)]];
+				}
 				break;
 			case 'J': // Next player draws {jokerWorth} cards
 				this.CONTROLLER.drawCard(this.getNextPlayer(), this.CONFIG.jokerWorth);
@@ -80,7 +83,9 @@ class GameModel {
 	 */
 	changeType(type) {
 		this.playerCanPlay = true;
+		this.playAgain = false;
 		this.currentType = type;
+		this.nextTurn();
 	}
 
 	/**
@@ -139,16 +144,21 @@ class GameModel {
 	 */
 	nextTurn() {
 		if( this.direction === 'clockwise' ) {
-			this.turn++;
-			if( this.turn > this.CONFIG.computerCount ) {
-				this.turn = 0;
+			this.currentPlayerId++;
+			if( this.currentPlayerId > this.CONFIG.computerCount ) {
+				this.currentPlayerId = 0;
 			}
 		} else {
-			this.turn--;
-			if( this.turn < 0 ) {
-				this.turn = this.CONFIG.computerCount;
+			this.currentPlayerId--;
+			if( this.currentPlayerId < 0 ) {
+				this.currentPlayerId = this.CONFIG.computerCount;
 			}
 		}
+		let THAT = this;
+		setTimeout( () => {
+			THAT.CONTROLLER.playComputer();
+		}, 1000);
+		
 	}
 
 	/**
@@ -156,15 +166,15 @@ class GameModel {
 	 */
 	getNextPlayer() {
 		if( this.direction == 'clockwise' ) {
-			if( this.turn + 1 > this.CONFIG.computerCount ) {
+			if( this.currentPlayerId + 1 > this.CONFIG.computerCount ) {
 				return 0;
 			}
-			return this.turn + 1;
+			return this.currentPlayerId + 1;
 		} else {
-			if( this.turn - 1 < 0 ) {
+			if( this.currentPlayerId - 1 < 0 ) {
 				return this.CONFIG.computerCount;
 			}
-			return this.turn - 1;
+			return this.currentPlayerId - 1;
 		}
 	}
 
@@ -183,7 +193,7 @@ class GameModel {
 	 * Returns if the current turn is the user's
 	 */
 	isUserTurn() {
-		if( this.turn === 0 ) {
+		if( this.currentPlayerId === 0 ) {
 			return true;
 		} else {
 			return false;

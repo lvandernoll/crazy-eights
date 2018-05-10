@@ -1,17 +1,40 @@
 class Computer extends Player {
 
 	/**
+	 * @param {Controller} controller - The game's controller
 	 * @param {String} name - The computer's username
 	 * @param {Array} cards - An array containing the computer's cards
 	 */
-	constructor(name, cards) {
+	constructor(controller, name, cards) {
 		super(cards);
 		console.log(this);
 
+		this.CONTROLLER = controller;
 		this.NAME = name;
 	}
 
+	/**
+	 * Returns the computer's playername
+	 * @returns {String} - The computer's playername
+	 */
 	getName() {
 		return this.NAME;
+	}
+	
+	play() {
+		let checkedHand = this.CONTROLLER.checkHand(this.hand);
+		let validCardIds = [];
+		checkedHand.forEach( (card, i) => {
+			if( checkedHand[i] ) {
+				validCardIds.push(i);
+			}
+		});
+		let randomCardId = validCardIds[Math.floor(Math.random() * validCardIds.length)];
+		if( typeof randomCardId == 'undefined' ) {
+			this.CONTROLLER.drawCard(this.CONTROLLER.currentPlayerId(), 1);
+			this.CONTROLLER.nextTurn();
+		} else {
+			this.CONTROLLER.playCard(this.CONTROLLER.currentPlayerId(), randomCardId);
+		}
 	}
 }
