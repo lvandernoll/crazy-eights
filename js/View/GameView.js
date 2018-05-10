@@ -120,8 +120,9 @@ class GameView {
 	 * Shows the deck containing the remaining cards
 	 * @param {Array} deckCount - The amount of cards left in the deck
 	 * @param {Boolean} userCanPlay - A boolean which specifies if the user can draw a card
+	 * @param {Boolean} userHasValidCards - A boolean whichn specifies if the user has valid cards to play
 	 */
-	showDeck(deckCount, userCanPlay) {
+	showDeck(deckCount, userCanPlay, userHasValidCards) {
 		let textField = document.createElement('header');
 		textField.innerText = this.CONFIG.text.deck;
 		let cardImage = document.createElement('img');
@@ -133,15 +134,11 @@ class GameView {
 		this.DECKVIEW.appendChild(cardImage);
 		this.DECKVIEW.appendChild(cardCount);
 
-		let hasDrawn = false;
-		if( userCanPlay ) {
+		if( userCanPlay && !userHasValidCards ) {
 			// Click listener
 			cardImage.addEventListener('click', () => {
-				if( !hasDrawn ) {
-					hasDrawn = true;
-					this.CONTROLLER.drawCard(0, 1);
-					this.CONTROLLER.nextTurn();
-				}
+				this.CONTROLLER.drawCard(0, 1);
+				this.CONTROLLER.nextTurn();
 			});
 		}
 	}
@@ -155,9 +152,6 @@ class GameView {
 		textField.innerText = 'Pile'; // Will be removed later
 		let cardImage = document.createElement('img');
 		cardImage.setAttribute('src', lastCardImage);
-		cardImage.addEventListener('click', () => { // Will be removed later
-			this.CONTROLLER.reshuffle();
-		});
 
 		this.PILEVIEW.appendChild(textField);
 		this.PILEVIEW.appendChild(cardImage);

@@ -65,6 +65,7 @@ class GameController {
 	 */
 	updateView() {
 		this.VIEW.clearView();
+		// Opponents
 		for( let i = 1; i < this.PLAYERS.length; i++ ) {
 			let isCurrentPlayer;
 			if( this.MODEL.currentPlayer() === i ) {
@@ -74,17 +75,11 @@ class GameController {
 			}
 			this.VIEW.showOpponentHeader(this.PLAYERS[i].getName(), this.PLAYERS[i].getHand().length, isCurrentPlayer);
 		}
-		let userCanPlay;
-		if( this.MODEL.canPlay() && this.MODEL.isUserTurn() ) {
-			userCanPlay = true;
-		} else {
-			userCanPlay = false;
-		}
-		this.VIEW.showDeck(this.DECK.getDeck().length, userCanPlay);
+		// Pile
 		this.VIEW.showPile(this.MODEL.getTopCard().image);
-		
-		let checkedHand = [];
+		// Hand
 		let userHand = this.PLAYERS[0].getHand();
+		let checkedHand = [];
 		let isCurrentPlayer;
 		if( this.MODEL.isUserTurn() ) {
 			isCurrentPlayer = true;
@@ -96,6 +91,21 @@ class GameController {
 			})
 		}
 		this.VIEW.showUserHand(userHand, checkedHand, isCurrentPlayer);
+		// Deck
+		let userCanPlay;
+		if( this.MODEL.canPlay() && this.MODEL.isUserTurn() ) {
+			userCanPlay = true;
+		} else {
+			userCanPlay = false;
+		}
+		let userHasValidCards = false
+		for( let i = 0; i < checkedHand.length; i++ ) {
+			if( checkedHand[i] ) {
+				userHasValidCards = true;
+				break;
+			}
+		};
+		this.VIEW.showDeck(this.DECK.getDeck().length, userCanPlay, userHasValidCards);
 	}
 
 	/**
