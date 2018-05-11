@@ -25,19 +25,34 @@ class Computer extends Player {
 	 * Checks which cards can be played and picks one. If none can be played it draws one and continues to the next turn
 	 */
 	play() {
-		let checkedHand = this.CONTROLLER.checkHand(this.hand);
-		let validCardIds = [];
-		checkedHand.forEach( (card, i) => {
-			if( checkedHand[i] ) {
-				validCardIds.push(i);
+		// Plays 2 or Joker when 2 or Joker has been played to this player
+		let playedDrawCard = false;
+		if( this.CONTROLLER.continuousDrawCards().length > 0 ) {
+			for( let i = 0; i < this.hand.length; i++ ) {
+				if( this.hand[i].code === 2 || this.hand[i].code === 'J' ) {
+					playedDrawCard = true;
+					this.CONTROLLER.playCard(this.CONTROLLER.currentPlayerId(), i);
+					break;
+				}
 			}
-		});
-		let randomCardId = validCardIds[Math.floor(Math.random() * validCardIds.length)];
-		if( typeof randomCardId == 'undefined' ) {
-			this.CONTROLLER.drawCard(this.CONTROLLER.currentPlayerId(), 1);
-			this.CONTROLLER.nextTurn();
-		} else {
-			this.CONTROLLER.playCard(this.CONTROLLER.currentPlayerId(), randomCardId);
+		}
+
+		if( !playedDrawCard ) {
+			let checkedHand = this.CONTROLLER.checkHand(this.hand);
+			let validCardIds = [];
+			checkedHand.forEach( (card, i) => {
+				if( checkedHand[i] ) {
+					validCardIds.push(i);
+				}
+			});
+
+			let randomCardId = validCardIds[Math.floor(Math.random() * validCardIds.length)];
+			if( typeof randomCardId == 'undefined' ) {
+				this.CONTROLLER.drawCard(this.CONTROLLER.currentPlayerId(), 1);
+				this.CONTROLLER.nextTurn();
+			} else {
+				this.CONTROLLER.playCard(this.CONTROLLER.currentPlayerId(), randomCardId);
+			}
 		}
 	}
 }

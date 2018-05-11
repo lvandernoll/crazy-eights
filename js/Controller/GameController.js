@@ -49,9 +49,22 @@ class GameController {
 			this.MODEL.putCard(card);
 			this.PLAYERS[playerId].removeCard(cardId);
 			if( !this.MODEL.playerMustPlayAgain() ) {
+				if( this.PLAYERS[playerId].getHand().length < 1 ) {
+					if( this.MODEL.getTopCard().code !== 'A'
+					&& this.MODEL.getTopCard().code !== 2
+					&& this.MODEL.getTopCard().code !== 7
+					&& this.MODEL.getTopCard().code !== 8
+					&& this.MODEL.getTopCard().code !== 'B'
+					&& this.MODEL.getTopCard().code !== 'H'
+					&& this.MODEL.getTopCard().code !== 'J' ) {
+						console.log('win');
+					} else {
+						this.drawCard(playerId, this.CONFIG.specialEndPunishment);
+					}
+				}
 				this.MODEL.nextTurn();
 			} else {
-				let THAT = this;
+				const THAT = this;
 				setTimeout( () => {
 					THAT.playComputer()
 				}, 1000);
@@ -195,5 +208,37 @@ class GameController {
 	nextTurn() {
 		this.MODEL.nextTurn();
 		this.updateView();
+	}
+
+	/**
+	 * Returns the hand of the player with a certain playerId
+	 * @param {number} playerId - The id of the player
+	 * @returns {Array} - An array containing all cards in that user's hand
+	 */
+	getHand(playerId) {
+		return this.PLAYERS[playerId].getHand();
+	}
+
+	/**
+	 * Returns the top card of the pile
+	 * @returns {Object} - The card
+	 */
+	getTopCard() {
+		return this.MODEL.getTopCard();
+	}
+
+	/**
+	 * Makes a player draw an amount of cards based on the continuously played draw-cards
+	 */
+	handleDrawCard() {
+		this.MODEL.handleDrawCard(this.MODEL.currentPlayer(), false);
+	}
+
+	/**
+	 * Returns the continuous draw cards played
+	 * @returns {Array} - The array containing the continuous draw cards
+	 */
+	continuousDrawCards() {
+		return this.MODEL.getContinuousDrawCards();
 	}
 }

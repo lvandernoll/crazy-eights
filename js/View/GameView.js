@@ -138,6 +138,7 @@ class GameView {
 			// Click listener
 			cardImage.addEventListener('click', () => {
 				this.CONTROLLER.drawCard(0, 1);
+				this.CONTROLLER.handleDrawCard();
 				this.CONTROLLER.nextTurn();
 			});
 		}

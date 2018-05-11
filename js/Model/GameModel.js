@@ -16,16 +16,20 @@ class GameModel {
 		this.currentPlayerId = 0;
 		this.direction = 'clockwise';
 		this.playAgain = false;
+		this.continuousDrawCards = [];
 	}
 
 	/**
-	 * Removes all cards but the top one from the pile and returns these cards
+	 * Removes all cards but the top one (and any continuous draw-cards at the top) from the pile and returns these cards
 	 * @returns {Array} - An array containing all taken cards
 	 */
 	takeCards() {
 		let takenCards = this.pile;
-		this.pile = [];
-		this.pile.push(takenCards.pop());
+		if( this.continuousDrawCards.length > 0 ) {
+			this.pile = takenCards.splice(-this.continuousDrawCards.length, this.continuousDrawCards.length);
+		} else {
+			this.pile.push(takenCards.pop());
+		}
 		return takenCards;
 	}
 
@@ -47,13 +51,17 @@ class GameModel {
 	 * @param {Object} card - The card to check
 	 */
 	checkCardRules(card) {
+		if( this.continuousDrawCards.length > 0 && card.code !== 2
+		&& this.continuousDrawCards.length > 0 && card.code !== 'J' ) {
+			this.handleDrawCard(this.currentPlayerId, true);
+		}
 		this.playAgain = false;
 		switch( card.code ) {
 			case 'A': // Change direction
 				this.switchDirection();
 				break;
-			case 2: // Next player draws 2 cards
-				this.CONTROLLER.drawCard(this.getNextPlayer(), 2);
+			case 2: // Next player draws 2 cards (if that player does not have any draw-cards)
+				this.handleOpponentDraw();
 				break;
 			case 7: // Player has to play another turn
 			case 'H':
@@ -71,8 +79,8 @@ class GameModel {
 					this.currentType = this.CONFIG.cardTypes[Object.keys(this.CONFIG.cardTypes)[Math.floor(Math.random() * 4)]];
 				}
 				break;
-			case 'J': // Next player draws {jokerWorth} cards
-				this.CONTROLLER.drawCard(this.getNextPlayer(), this.CONFIG.jokerWorth);
+			case 'J': // Next player draws {jokerWorth} cards (if that player does not have any draw-cards)
+				this.handleOpponentDraw();
 				break;
 		}
 	}
@@ -154,7 +162,7 @@ class GameModel {
 				this.currentPlayerId = this.CONFIG.computerCount;
 			}
 		}
-		let THAT = this;
+		const THAT = this;
 		setTimeout( () => {
 			THAT.CONTROLLER.playComputer();
 		}, 1000);
@@ -198,5 +206,56 @@ class GameModel {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Handles the '2' and 'Joker' card rules
+	 */
+	handleOpponentDraw() {
+		this.continuousDrawCards.push(this.getTopCard());
+		const NEXTPLAYERID = this.getNextPlayer();
+		const HAND = this.CONTROLLER.getHand(NEXTPLAYERID);
+
+		let hasDrawCard = false;
+		for( let i = 0; i < HAND.length; i++ ) {
+			if( HAND[i].code === 2 || HAND[i].code === 'J' ) {
+				hasDrawCard = true;
+				break;
+			}
+		}
+
+		if( !hasDrawCard ) {
+			this.handleDrawCard(NEXTPLAYERID, true);
+		}
+	}
+
+	/**
+	 * Makes a player draw an amount of cards based on the continuously played draw-cards
+	 * @param {number} playerId - The id of the player
+	 * @param {Boolean} playedACard - A boolean which specifies if the player has played a card this turn
+	 */
+	handleDrawCard(playerId, playedACard) {
+		if( playedACard
+		|| !playedACard && this.getTopCard().code === 2
+		|| !playedACard && this.getTopCard().code === 'J' ) {
+			let amountToDraw = 0;
+			this.continuousDrawCards.forEach( (card) => {
+				if( card.code === 2 ) {
+					amountToDraw += 2;
+				} else {
+					amountToDraw += this.CONFIG.jokerWorth;
+				}
+			});
+			this.CONTROLLER.drawCard(playerId, amountToDraw);
+			this.continuousDrawCards = [];
+		}
+	}
+
+	/**
+	 * Returns the continuous draw cards played
+	 * @returns {Array} - The array containing the continuous draw cards
+	 */
+	getContinuousDrawCards() {
+		return this.continuousDrawCards;
 	}
 }
