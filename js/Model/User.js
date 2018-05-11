@@ -5,7 +5,7 @@ class User extends Player {
 	 */
 	constructor(cards) {
 		super(cards);
-		(this);
+		console.log(this);
 
 	}
 }
