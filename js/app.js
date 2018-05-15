@@ -1,4 +1,4 @@
-fetch('./.config')
+fetch('./app.config')
 	.then( response => response.json() )
 	.then( responseJson => {
 		const GAME = new GameController(responseJson);
