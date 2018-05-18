@@ -5,8 +5,6 @@ class Deck {
 	 * @param {Controller} controller - The game's controller
 	 */
 	constructor(config, controller) {
-		console.log(this);
-
 		this.CONFIG = config;
 		this.CONTROLLER = controller;
 

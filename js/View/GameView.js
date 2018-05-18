@@ -5,8 +5,6 @@ class GameView {
 	 * @param {Controller} controller - The game's controller
 	 */
 	constructor(config, controller) {
-		console.log(this);
-
 		this.CONFIG = config;
 		this.CONTROLLER = controller;
 
@@ -19,6 +17,7 @@ class GameView {
 		this.POPUPHEADERVIEW = document.querySelector('#popupHeader');
 		this.CONFIRMPOPUPVIEW = document.querySelector('#confirmPopup');
 		this.POPUPSELECTORVIEW = document.querySelector('#popupSelector');
+		this.POPUPTEXTVIEW = document.querySelector('#popupText');
 	}
 
 	/**
@@ -37,6 +36,26 @@ class GameView {
 			let option = document.createElement('option');
 			option.innerText = cardTypes[Object.keys(cardTypes)[i]];
 			this.POPUPSELECTORVIEW.appendChild(option);
+		}
+
+		let popupText = 'Test1';
+		this.POPUPTEXTVIEW.innerText = popupText;
+	}
+
+	/**
+	 * Changes the content in the popup to a certain type
+	 * @param {String} type - The type which specifies what the popup should change into
+	 */
+	changePopup(type) {
+		switch( type ) {
+			case 'selectType':
+				this.POPUPSELECTORVIEW.classList.remove('hidden');
+				this.POPUPTEXTVIEW.classList.add('hidden');
+				break;
+			case 'gameEnd':
+				this.POPUPTEXTVIEW.classList.remove('hidden');
+				this.POPUPSELECTORVIEW.classList.add('hidden');
+				break;
 		}
 	}
 

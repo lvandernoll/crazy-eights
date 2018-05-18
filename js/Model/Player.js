@@ -4,8 +4,6 @@ class Player {
 	 * @param {Array} cards - An array containing the starting cards for the player
 	 */
 	constructor(cards) {
-		console.log(this);
-
 		this.hand = cards;
 	}
 

@@ -7,7 +7,6 @@ class Computer extends Player {
 	 */
 	constructor(controller, name, cards) {
 		super(cards);
-		console.log(this);
 
 		this.CONTROLLER = controller;
 		this.NAME = name;

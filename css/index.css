@@ -41,8 +41,11 @@ img {
 
 .popup__selector {
   margin: 0 auto;
-  height: 50%;
-  align-self: flex-end; }
+  height: 50%; }
+
+.popup__text {
+  margin: 0 auto;
+  height: 50%; }
 
 .hidden {
   display: none; }

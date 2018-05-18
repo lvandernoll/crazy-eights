@@ -5,8 +5,6 @@ class GameModel {
 	 * @param {Controller} controller - The game's controller
 	 */
 	constructor(config, controller) {
-		console.log(this);
-
 		this.CONFIG = config;
 		this.CONTROLLER = controller;
 
@@ -81,7 +79,6 @@ class GameModel {
 				break;
 			case 'J': // Next player draws {jokerWorth} cards (if that player does not have any draw-cards)
 				this.handleOpponentDraw();
-				break;
 		}
 	}
 
@@ -151,22 +148,23 @@ class GameModel {
 	 * Changes the turn to the id of the next player
 	 */
 	nextTurn() {
-		if( this.direction === 'clockwise' ) {
-			this.currentPlayerId++;
-			if( this.currentPlayerId > this.CONFIG.computerCount ) {
-				this.currentPlayerId = 0;
+		if( this.playerCanPlay ) {
+			if( this.direction === 'clockwise' ) {
+				this.currentPlayerId++;
+				if( this.currentPlayerId > this.CONFIG.computerCount ) {
+					this.currentPlayerId = 0;
+				}
+			} else {
+				this.currentPlayerId--;
+				if( this.currentPlayerId < 0 ) {
+					this.currentPlayerId = this.CONFIG.computerCount;
+				}
 			}
-		} else {
-			this.currentPlayerId--;
-			if( this.currentPlayerId < 0 ) {
-				this.currentPlayerId = this.CONFIG.computerCount;
-			}
+			const THAT = this;
+			setTimeout( () => {
+				THAT.CONTROLLER.playComputer();
+			}, 1000);
 		}
-		const THAT = this;
-		setTimeout( () => {
-			THAT.CONTROLLER.playComputer();
-		}, 1000);
-		
 	}
 
 	/**
@@ -257,5 +255,13 @@ class GameModel {
 	 */
 	getContinuousDrawCards() {
 		return this.continuousDrawCards;
+	}
+
+	/**
+	 * Makes sure the player can't keep playing if the game is over
+	 */
+	endGame() {
+		this.playerCanPlay = false;
+		this.playAgain = true;
 	}
 }

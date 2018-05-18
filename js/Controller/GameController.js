@@ -1,8 +1,6 @@
 class GameController {
 
 	constructor(config) {
-		console.log(this);
-
 		this.CONFIG = config;
 
 		// Create model
@@ -18,7 +16,7 @@ class GameController {
 		// Create players
 		this.PLAYERS = [];
 		// Create user
-		this.PLAYERS.push(new User(this.DECK.drawCard(this.CONFIG.startingCardsCount)));
+		this.PLAYERS.push(new Player(this.DECK.drawCard(this.CONFIG.startingCardsCount)));
 		// Create computers
 		for( let i = 0; i < this.CONFIG.computerCount; i++ ) {
 			this.PLAYERS.push(new Computer(this, `Computer ${i + 1}`, this.DECK.drawCard(this.CONFIG.startingCardsCount)));
@@ -58,7 +56,9 @@ class GameController {
 					&& this.MODEL.getTopCard().code !== 'B'
 					&& this.MODEL.getTopCard().code !== 'H'
 					&& this.MODEL.getTopCard().code !== 'J' ) {
-						console.log('win');
+						this.VIEW.changePopup('gameEnd');
+						this.MODEL.endGame();
+						this.VIEW.togglePopup();
 					} else {
 						this.drawCard(playerId, this.CONFIG.specialEndPunishment);
 					}
@@ -141,7 +141,7 @@ class GameController {
 	 */
 	playComputer() {
 		let currentPlayerId = this.MODEL.currentPlayer();
-		if( currentPlayerId !== 0 ) {
+		if( currentPlayerId !== 0 && this.MODEL.canPlay() ) {
 			this.PLAYERS[currentPlayerId].play();
 		}
 	}
@@ -150,6 +150,7 @@ class GameController {
 	 * Opens a popup where the user can pick a type to choose the current playable type into
 	 */
 	openChangeTypePopup() {
+		this.VIEW.changePopup('selectType');
 		this.VIEW.togglePopup();
 	}
 
@@ -241,5 +242,12 @@ class GameController {
 	 */
 	continuousDrawCards() {
 		return this.MODEL.getContinuousDrawCards();
+	}
+
+	/**
+	 * Restarts the game
+	 */
+	restartGame() {
+		// this = new GameController(this.CONFIG);
 	}
 }
