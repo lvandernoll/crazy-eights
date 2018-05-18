@@ -13,7 +13,8 @@ class GameController {
 			this.DECK.createDeck();
 		}
 		this.DECK.shuffle();
-		this.MODEL.putCard(this.DECK.drawCard()[0]); // Will be removed later
+		// Put card from deck on pile
+		this.MODEL.putCard(this.DECK.drawCard()[0]);
 		// Create players
 		this.PLAYERS = [];
 		// Create user
