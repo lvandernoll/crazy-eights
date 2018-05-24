@@ -26,11 +26,6 @@ class GameView {
 	constructPopup() {
 		this.POPUPHEADERVIEW.innerText = this.CONFIG.text.selectType;
 
-		this.CONFIRMPOPUPVIEW.addEventListener('click', () => {
-			this.togglePopup();
-			this.CONTROLLER.changeType(this.POPUPSELECTORVIEW.value)
-		});
-
 		let cardTypes = this.CONFIG['cardTypes'];
 		for( let i = 0; i < 4; i++ ) {
 			let option = document.createElement('option');
@@ -51,10 +46,17 @@ class GameView {
 			case 'selectType':
 				this.POPUPSELECTORVIEW.classList.remove('hidden');
 				this.POPUPTEXTVIEW.classList.add('hidden');
+				this.CONFIRMPOPUPVIEW.addEventListener('click', () => {
+					this.togglePopup();
+					this.CONTROLLER.changeType(this.POPUPSELECTORVIEW.value)
+				});
 				break;
 			case 'gameEnd':
 				this.POPUPTEXTVIEW.classList.remove('hidden');
 				this.POPUPSELECTORVIEW.classList.add('hidden');
+				this.CONFIRMPOPUPVIEW.addEventListener('click', () => {
+					// Restart the game here
+				});
 				break;
 		}
 	}
